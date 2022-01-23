@@ -1,17 +1,39 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 import App from './App'
-import reportWebVitals from './reportWebVitals'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+const queryClient = new QueryClient()
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Callbacks = {}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Params = {}
+
+(window as any).renderPoultryPage = (
+  containerId: string,
+  _params: Params,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _callbacks: Callbacks = {}
+) => {
+  const targetDocument = document.getElementById(containerId)
+
+  if (targetDocument) {
+    ReactDOM.render(
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>,
+      targetDocument,
+    )
+  }
+};
+
+(window as any).unmountPoultryPage = (containerId: string) => {
+  const targetDocument = document.getElementById(containerId)
+
+  if (targetDocument) {
+    ReactDOM.unmountComponentAtNode(targetDocument)
+  }
+}
